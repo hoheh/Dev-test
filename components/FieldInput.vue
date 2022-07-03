@@ -6,6 +6,7 @@
       :value="value"
       :class="modifiers"
       class="input field-input__input"
+      v-on="listeners"
     />
   </div>
 </template>
@@ -19,7 +20,7 @@ export default {
       type: String,
       default: "text",
       validator: (type) => {
-        ["url", "text", "number"].includes(type);
+        return ["url", "text"].includes(type);
       },
     },
     value: { type: [Number, String], default: "" },

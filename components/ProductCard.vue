@@ -1,53 +1,93 @@
 <template>
   <div class="product-card">
     <div class="product-card__inner">
-      <div class="product-card__image">
-        <img
-          src="https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album"
-          alt=""
-        />
-      </div>
+      <img class="product-card__image" :src="product.url" alt="" />
 
       <div class="product-card__content">
         <div class="product-card__name">
-          <h2>Наименование товара</h2>
+          <h2>{{ product.name }}</h2>
         </div>
 
         <div class="product-card__description">
           <p>
-            Довольно-таки интересное описание товара в несколько строк.
-            Довольно-таки интересное описание товара в несколько строк
+            {{ product.description }}
           </p>
         </div>
 
-        <div class="product-card__price">12000 руб.</div>
+        <div class="product-card__price">
+          {{ new Intl.NumberFormat().format(product.price) }} руб.
+        </div>
       </div>
     </div>
+
+    <div class="product-card__actions" />
   </div>
 </template>
 
 <script>
 export default {
   name: "ProductCard",
+
+  props: {
+    product: {
+      type: Object,
+      default: () => {},
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .product-card {
+  position: relative;
+
   &__inner {
     overflow: hidden;
     background-color: #fffefb;
-    height: 423px;
-    width: 332px;
+    width: 100%;
     border-radius: 4px;
   }
 
-  &__name {
-    h2 {
-      font-size: 20px;
-      line-height: 25.14px;
-      font-weight: 600;
+  &__button {
+    width: 32px;
+    height: 32px;
+
+    * {
+      padding: 8px 9px;
     }
+  }
+
+  &__name > * {
+    font-size: 20px;
+    line-height: 25.14px;
+    font-weight: 600;
+  }
+
+  &:hover {
+    .product-card__actions {
+      transition: 0.2s;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &__actions {
+    transition: 0.2s;
+    opacity: 0;
+    visibility: hidden;
+    content: "";
+    position: absolute;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    transform: translateX(50%) translateY(-50%);
+    right: 7px;
+    top: 7px;
+    background-color: #ff8484;
+    background-image: url("~/assets/images/delete.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
   }
 
   &__price {
@@ -61,19 +101,19 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: 16px 16px 24px;
   }
 
   &__description {
     font-size: 16px;
     line-height: 20.11px;
+    margin-bottom: 32px;
   }
 
   &__image {
-    img {
-      max-height: 200px;
-      width: 100%;
-    }
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
   }
 }
 </style>

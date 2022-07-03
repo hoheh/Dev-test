@@ -2,21 +2,24 @@
   <div class="app">
     <div class="app__inner">
       <div class="app__header">
-        <div class="app__header-title">
-          <h1 class="">Добавление товара</h1>
-        </div>
-        <div class="app__header-filter">
-          <div class="selector">
-            <p class="selector__name">По умолчанию</p>
-            <img src="~/assets/images/drop_arrow.svg" alt="" />
-          </div>
-        </div>
+        <app-header />
       </div>
 
       <sidebar-layout class="app__main">
-        <template #form> </template>
+        <template #form>
+          <form-constructor @form:submit="submitForm" />
+        </template>
         <template #content>
-          <ProductList />
+          <div class="product-list">
+            <div class="product-list__wrapper">
+              <product-card
+                v-for="product in products"
+                :key="product.id"
+                :product="product"
+                class="product-list__item"
+              />
+            </div>
+          </div>
         </template>
       </sidebar-layout>
     </div>
@@ -25,17 +28,69 @@
 
 <script>
 import SidebarLayout from "~/components/SidebarLayout.vue";
+import AppHeader from "~/components/AppHeader.vue";
 
 export default {
   name: "App",
 
-  components: { SidebarLayout },
+  components: { SidebarLayout, AppHeader },
+
+  data: () => ({
+    products: [
+      {
+        id: 1,
+        name: "Наименование товара",
+        description:
+          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
+        price: 10000,
+        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
+      },
+      {
+        id: 2,
+        name: "Наименование товара",
+        description:
+          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
+        price: 10000,
+        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
+      },
+      {
+        id: 3,
+        name: "Наименование товара",
+        description:
+          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
+        price: 10000,
+        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
+      },
+
+      {
+        id: 4,
+        name: "Наименование товара",
+        description:
+          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
+        price: 10000,
+        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
+      },
+
+      {
+        id: 5,
+        name: "Наименование товара",
+        description:
+          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
+        price: 10000,
+        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
+      },
+    ],
+  }),
+
+  methods: {
+    submitForm(target) {
+      console.log("Submitting form", target);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/styles/variables";
-
 .app {
   &__inner {
     padding: 32px;
@@ -45,31 +100,13 @@ export default {
     margin-top: 16px;
   }
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .product-list {
+    &__wrapper {
+      display: grid;
+      gap: 16px;
 
-    &-title > * {
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 35.2px;
-    }
-
-    &-filter {
-      .selector {
-        display: flex;
-        align-items: baseline;
-        gap: 5px;
-        border-radius: $border-radius;
-        font-size: 12px;
-        padding: 14px 17px;
-        background-color: #fffefb;
-        box-shadow: 0px 2px 5px $color-shadow;
-
-        &__name {
-          color: #b4b4b4;
-        }
+      @media (min-width: 480px) {
+        grid-template-columns: repeat(auto-fit, minmax(335px, 1fr));
       }
     }
   }
