@@ -6,6 +6,7 @@
       :value="value"
       :class="modifiers"
       class="input field-input__input"
+      v-on="listeners"
     />
   </div>
 </template>
@@ -18,9 +19,6 @@ export default {
     type: {
       type: String,
       default: "text",
-      validator: (type) => {
-        ["url", "text", "number"].includes(type);
-      },
     },
     value: { type: [Number, String], default: "" },
     isError: { type: Boolean, default: false },
@@ -31,7 +29,10 @@ export default {
       return {
         ...this.$listeners,
         input: (event) => {
-          this.$emit("input", event.target.value);
+          this.$emit(
+            "input",
+            event.srcElement.id === "price" ? event : event.target.value
+          );
         },
       };
     },
@@ -50,13 +51,8 @@ export default {
 
 .field-input {
   &__input {
-    &:focus,
-    &:hover {
-      border-color: $color-positive;
-    }
-
     &--error {
-      border-color: 1px solid $color-negative;
+      border: 1px solid $color-negative;
     }
   }
 }

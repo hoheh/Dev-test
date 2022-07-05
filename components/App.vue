@@ -2,21 +2,28 @@
   <div class="app">
     <div class="app__inner">
       <div class="app__header">
-        <div class="app__header-title">
-          <h1 class="">Добавление товара</h1>
-        </div>
-        <div class="app__header-filter">
-          <div class="selector">
-            <p class="selector__name">По умолчанию</p>
-            <img src="~/assets/images/drop_arrow.svg" alt="" />
-          </div>
-        </div>
+        <app-header @filter="filterProducts" />
       </div>
 
       <sidebar-layout class="app__main">
-        <template #form> </template>
+        <template #form>
+          <form-constructor @form:submit="submitForm" />
+        </template>
         <template #content>
-          <ProductList />
+          <div v-if="!!products.length" class="product-list">
+            <div class="product-list__wrapper">
+              <product-card
+                v-for="(product, index) in products"
+                :key="index"
+                @deleted="handleDelete"
+                :product="product"
+                class="product-list__item"
+              />
+            </div>
+          </div>
+          <div v-else class="product-list__out">
+            <h2 class="product-list__out-title">Товары отсутствуют</h2>
+          </div>
         </template>
       </sidebar-layout>
     </div>
@@ -25,17 +32,73 @@
 
 <script>
 import SidebarLayout from "~/components/SidebarLayout.vue";
+import AppHeader from "~/components/AppHeader.vue";
 
 export default {
   name: "App",
 
-  components: { SidebarLayout },
+  components: { SidebarLayout, AppHeader },
+
+  data: () => ({
+    products: [],
+  }),
+
+  watch: {
+    products(newValue, oldValue) {
+      sessionStorage?.setItem("products", JSON.stringify(this.products));
+    },
+  },
+
+  created() {
+    if (typeof window !== "undefined") {
+      const productsData = sessionStorage.getItem("products");
+
+      if (!!productsData) {
+        this.products = JSON.parse(productsData);
+      }
+    }
+  },
+
+  methods: {
+    submitForm(data) {
+      const { price, ...other } = data;
+
+      this.products = [
+        ...this.products,
+        {
+          id: ++this.products.length,
+          price: Number(price.split(" ").join("")),
+          ...other,
+        },
+      ];
+    },
+
+    handleDelete(productId) {
+      this.products = this.products.filter((product) => {
+        return product.id !== productId;
+      });
+    },
+
+    filterProducts(filter) {
+      switch (filter) {
+        case "desc":
+          this.products = this.products.sort((a, b) => b.price - a.price);
+          break;
+        case "asc":
+          this.products = this.products.sort((a, b) => a.price - b.price);
+          break;
+        case "byName":
+          this.products = this.products.sort(
+            (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0)
+          );
+          break;
+      }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~/assets/styles/variables";
-
 .app {
   &__inner {
     padding: 32px;
@@ -45,31 +108,27 @@ export default {
     margin-top: 16px;
   }
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .product-list {
+    &__wrapper {
+      display: grid;
+      gap: 16px;
 
-    &-title > * {
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 35.2px;
+      @media (max-width: 480px) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      @media (min-width: 480px) {
+        grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
+      }
     }
 
-    &-filter {
-      .selector {
-        display: flex;
-        align-items: baseline;
-        gap: 5px;
-        border-radius: $border-radius;
-        font-size: 12px;
-        padding: 14px 17px;
-        background-color: #fffefb;
-        box-shadow: 0px 2px 5px $color-shadow;
-
-        &__name {
-          color: #b4b4b4;
-        }
+    &__out {
+      &-title {
+        color: #aeaeae;
+        font-size: 26px;
+        line-height: 30px;
+        font-weight: 600;
+        text-align: center;
       }
     }
   }

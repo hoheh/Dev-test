@@ -47,13 +47,8 @@ export default {
 
 .field-textarea {
   &__textarea {
-    &:focus,
-    &:hover {
-      border-color: $color-positive;
-    }
-
     &--error {
-      border-color: 1px solid $color-negative;
+      border: 1px solid $color-negative;
     }
   }
 }
