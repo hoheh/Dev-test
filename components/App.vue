@@ -2,7 +2,7 @@
   <div class="app">
     <div class="app__inner">
       <div class="app__header">
-        <app-header />
+        <app-header @filter="filterProducts" />
       </div>
 
       <sidebar-layout class="app__main">
@@ -10,15 +10,19 @@
           <form-constructor @form:submit="submitForm" />
         </template>
         <template #content>
-          <div class="product-list">
+          <div v-if="!!products.length" class="product-list">
             <div class="product-list__wrapper">
               <product-card
-                v-for="product in products"
-                :key="product.id"
+                v-for="(product, index) in products"
+                :key="index"
+                @deleted="handleDelete"
                 :product="product"
                 class="product-list__item"
               />
             </div>
+          </div>
+          <div v-else class="product-list__out">
+            <h2 class="product-list__out-title">Товары отсутствуют</h2>
           </div>
         </template>
       </sidebar-layout>
@@ -36,55 +40,59 @@ export default {
   components: { SidebarLayout, AppHeader },
 
   data: () => ({
-    products: [
-      {
-        id: 1,
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: 10000,
-        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
-      },
-      {
-        id: 2,
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: 10000,
-        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
-      },
-      {
-        id: 3,
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: 10000,
-        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
-      },
-
-      {
-        id: 4,
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: 10000,
-        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
-      },
-
-      {
-        id: 5,
-        name: "Наименование товара",
-        description:
-          "Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк",
-        price: 10000,
-        url: "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album",
-      },
-    ],
+    products: [],
   }),
 
+  watch: {
+    products(newValue, oldValue) {
+      sessionStorage?.setItem("products", JSON.stringify(this.products));
+    },
+  },
+
+  created() {
+    if (typeof window !== "undefined") {
+      const productsData = sessionStorage.getItem("products");
+
+      if (!!productsData) {
+        this.products = JSON.parse(productsData);
+      }
+    }
+  },
+
   methods: {
-    submitForm(target) {
-      console.log("Submitting form", target);
+    submitForm(data) {
+      const { price, ...other } = data;
+
+      this.products = [
+        ...this.products,
+        {
+          id: ++this.products.length,
+          price: Number(price.split(" ").join("")),
+          ...other,
+        },
+      ];
+    },
+
+    handleDelete(productId) {
+      this.products = this.products.filter((product) => {
+        return product.id !== productId;
+      });
+    },
+
+    filterProducts(filter) {
+      switch (filter) {
+        case "desc":
+          this.products = this.products.sort((a, b) => b.price - a.price);
+          break;
+        case "asc":
+          this.products = this.products.sort((a, b) => a.price - b.price);
+          break;
+        case "byName":
+          this.products = this.products.sort(
+            (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0)
+          );
+          break;
+      }
     },
   },
 };
@@ -105,8 +113,22 @@ export default {
       display: grid;
       gap: 16px;
 
+      @media (max-width: 480px) {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
       @media (min-width: 480px) {
-        grid-template-columns: repeat(auto-fit, minmax(335px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(355px, 1fr));
+      }
+    }
+
+    &__out {
+      &-title {
+        color: #aeaeae;
+        font-size: 26px;
+        line-height: 30px;
+        font-weight: 600;
+        text-align: center;
       }
     }
   }

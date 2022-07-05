@@ -14,7 +14,7 @@
         <slot />
       </div>
 
-      <div v-if="errors && errors.length" class="field-container__errors">
+      <div v-show="errors && errors.length" class="field-container__errors">
         <div
           v-for="error in errors"
           :key="error"
@@ -42,8 +42,6 @@ export default {
 @import "~/assets/styles/variables";
 
 .field-container {
-  // margin-bottom: 16px;
-
   &__inner {
     > * + * {
       margin-top: 4px;
@@ -63,24 +61,22 @@ export default {
   }
 
   &__errors {
-    > * + * {
-      margin-top: 7px;
-    }
+    margin-top: 2px;
   }
 
   &__error {
-    font-size: 12px;
-    line-height: 15px;
+    font-size: 8px;
+    line-height: 10.06px;
     color: $color-negative;
   }
 
   &__inner--required &__title-content::after {
     content: "";
     position: absolute;
-    width: 4px;
+    width: 5px;
     margin-left: 2px;
     border-radius: 50%;
-    height: 4px;
+    height: 5px;
     background-color: $color-negative;
   }
 }

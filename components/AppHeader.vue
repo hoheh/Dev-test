@@ -1,12 +1,10 @@
 <template>
   <div class="header">
     <div class="header__title">
-      <h1 class="">
-        Добавление товара
-      </h1>
+      <h1 class="">Добавление товара</h1>
     </div>
     <div class="header__filter">
-      <selector class="header__selector" />
+      <selector class="header__selector" v-on="$listeners"/>
     </div>
   </div>
 </template>
@@ -39,13 +37,14 @@ export default {
     flex-direction: column;
     align-items: center;
 
-    .header__filter {
-      width: 100%;
+    .header__title > * {
+      text-align: center;
+      font-size: 24px;
     }
 
-    .header__selector {
-      display: flex;
-      justify-content: space-between;
+    .header__filter,
+    & > * {
+      width: 100%;
     }
   }
 }

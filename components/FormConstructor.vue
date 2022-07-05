@@ -3,57 +3,69 @@
     <form class="form-constructor__inner" @submit.prevent="formSubmit">
       <field-container
         :title="'Наименование товара'"
+        :errors="getErrors(formData.name)"
         class="form-constructor__field"
         :is-required="true"
       >
         <field-input
-          v-model="formData.productName"
+          v-model="formData.name"
+          :is-error="!!getErrors(formData.name).length"
           :type="'text'"
-          placeholder="Наименование товара"
+          :placeholder="'Введите наименование товара'"
         />
       </field-container>
 
       <field-container
         :title="'Описание товара'"
         class="form-constructor__field"
+        :is-required="false"
       >
         <field-textarea
-          v-model="formData.productDesc"
+          v-model="formData.description"
           :type="'text'"
-          placeholder="Введите описание товара"
+          :placeholder="'Введите описание товара'"
         />
       </field-container>
 
       <field-container
         :title="'Ссылка на изображение товара'"
         class="form-constructor__field"
+        :errors="getErrors(formData.url)"
         :is-required="true"
       >
         <field-input
-          v-model="formData.productUrl"
-          :type="'url'"
-          placeholder="Введите ссылку"
+          v-model="formData.url"
+          :is-error="!!getErrors(formData.url).length"
+          :type="'text'"
+          :placeholder="'Введите ссылку'"
         />
       </field-container>
 
       <field-container
         :title="'Цена товара'"
         class="form-constructor__field"
+        :errors="getErrors(formData.price)"
         :is-required="true"
       >
         <field-input
-          v-model="formData.productPrice"
+          id="price"
+          :is-error="!!getErrors(formData.price).length"
           :type="'text'"
+          :value="formData.price"
           placeholder="Введите цену"
+          @input="changePrice"
         />
       </field-container>
-    </form>
 
-    <div class="form-constructor__actions">
-      <button class="button button--positive">
-        Добавить товар
-      </button>
-    </div>
+      <div class="form-constructor__actions">
+        <input
+          type="submit"
+          :disabled="disabledStatus"
+          class="button button--positive"
+          value="Добавить товар"
+        />
+      </div>
+    </form>
   </div>
 </template>
 
@@ -69,27 +81,53 @@ export default {
 
   data: () => ({
     formData: {
-      productName: "",
-      productDesc: "",
-      productUrl: "",
-      productPrice: "",
+      name: "",
+      description: "",
+      url: "",
+      price: "",
     },
   }),
 
-  methods: {
-    formSubmit(target) {},
+  computed: {
+    disabledStatus() {
+      return !Object.keys(this.formData)
+        .filter((key) => {
+          return ["url", "name", "price"].includes(key);
+        })
+        .every((field) => {
+          return this.formData[field] !== "";
+        });
+    },
+  },
 
-    getFieldComponent(type) {
-      return {
-        input: "FieldInput",
-        textarea: "FieldTextarea",
-      }[type];
+  methods: {
+    formSubmit() {
+      this.$emit("form:submit", this.formData);
+
+      this.formData = {
+        name: "",
+        description: "",
+        url: "",
+        price: "",
+      };
+    },
+
+    getErrors(value) {
+      return !value.length ? ["Поле является обязательным"] : [];
+    },
+
+    changePrice(event) {
+      this.formData.price = event.target.value
+        .replace(/[^0-9.]/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "~/assets/styles/variables";
+
 .form-constructor {
   &__inner {
     width: 100%;
@@ -99,7 +137,7 @@ export default {
     padding-top: 24px;
   }
 
-  &__field:not(:last-child) {
+  &__field:not(:nth-last-child(2)) {
     padding-bottom: 16px;
   }
 }

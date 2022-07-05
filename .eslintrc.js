@@ -12,9 +12,10 @@ module.exports = {
   plugins: [],
   rules: {
     quotes: ["error", "double"],
-    "comma-dangle": ["error", "always-multiline"],
+    "no-extra-boolean-cast": 0,
+    "comma-dangle": 0,
     // "max-len": ["error", { code: 100 }],
-    "space-before-function-paren": "off",
+    "space-before-function-paren": 0,
     semi: ["error", "always"],
     "vue/html-self-closing": [
       "warning",

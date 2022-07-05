@@ -1,7 +1,7 @@
 <template>
   <div class="product-card">
     <div class="product-card__inner">
-      <img class="product-card__image" :src="product.url" alt="" />
+      <img class="product-card__image" :src="getImg" alt="" />
 
       <div class="product-card__content">
         <div class="product-card__name">
@@ -15,12 +15,13 @@
         </div>
 
         <div class="product-card__price">
-          {{ new Intl.NumberFormat().format(product.price) }} руб.
+          {{ new Intl.NumberFormat().format(product.price) }}
+          руб.
         </div>
       </div>
     </div>
 
-    <div class="product-card__actions" />
+    <div @click="deleteProduct" class="product-card__actions" />
   </div>
 </template>
 
@@ -32,6 +33,22 @@ export default {
     product: {
       type: Object,
       default: () => {},
+    },
+  },
+
+  computed: {
+    getImg() {
+      return !!this.product.url.match(
+        /[-a-zA-Z0-9@:%_+.~#?&/=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&/=]*)?/gi
+      )
+        ? this.product.url
+        : "https://sun9-21.userapi.com/impg/0VD7ap-CY1qymA7xeTSdaSS39KWQXe_YDCOEEA/nfMaI86Fx7Q.jpg?size=1080x1022&quality=95&sign=37a35c1ac17dc40dcc744dfc886aa5f3&type=album";
+    },
+  },
+
+  methods: {
+    deleteProduct() {
+      this.$emit("deleted", this.product.id);
     },
   },
 };
@@ -61,6 +78,9 @@ export default {
     font-size: 20px;
     line-height: 25.14px;
     font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &:hover {
@@ -91,13 +111,13 @@ export default {
   }
 
   &__price {
-    padding-top: 16px;
     font-size: 24px;
     font-weight: 600;
     line-height: 30.17px;
   }
 
   &__content {
+    justify-content: space-between;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -107,7 +127,14 @@ export default {
   &__description {
     font-size: 16px;
     line-height: 20.11px;
-    margin-bottom: 32px;
+    max-width: 440px;
+    word-wrap: break-word;
+    overflow: auto;
+    height: 100px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__image {

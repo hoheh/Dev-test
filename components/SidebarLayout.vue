@@ -7,7 +7,9 @@
     </div>
 
     <div class="sidebar-layout__content">
-      <slot name="content" />
+      <transition name="products">
+        <slot name="content" />
+      </transition>
     </div>
   </div>
 </template>
@@ -36,7 +38,7 @@ export default {
   }
 
   &__content {
-    min-height: 440px;
+    min-height: 200px;
   }
 
   &__wrapper {
