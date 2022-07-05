@@ -52,6 +52,7 @@
           :is-error="!!getErrors(formData.price).length"
           :type="'text'"
           :value="formData.price"
+          maxlength="16"
           placeholder="Введите цену"
           @input="changePrice"
         />

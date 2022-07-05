@@ -114,6 +114,9 @@ export default {
     font-size: 24px;
     font-weight: 600;
     line-height: 30.17px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &__content {
