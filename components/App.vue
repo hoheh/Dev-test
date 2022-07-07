@@ -80,7 +80,7 @@ export default {
     },
 
     filterProducts(filter) {
-      switch (filter) {
+      switch (filter.filtered) {
         case "desc":
           this.products = this.products.sort((a, b) => b.price - a.price);
           break;
