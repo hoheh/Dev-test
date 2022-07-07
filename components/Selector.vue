@@ -4,12 +4,12 @@
     <div class="selector__container">
       <label for="selector-open-button"></label>
       <div class="selector__wrapper">
-        <p class="selector__selected-filter">По умолчанию</p>
+        <p class="selector__selected-filter">{{ selector }}</p>
         <img src="~/assets/images/drop_arrow.svg" alt="" />
       </div>
       <div class="selector__options">
         <div
-          @click="filterProduct(filter.filtered)"
+          @click="filterProduct(filter)"
           v-for="(filter, index) in selectorFilters"
           class="selector__option"
           :key="`${filter.id}_${index}`"
@@ -29,6 +29,8 @@ export default {
 
   data: () => ({
     showFitlers: false,
+
+    selector: "По умолчанию",
 
     selectorFilters: [
       {
@@ -52,8 +54,10 @@ export default {
   }),
 
   methods: {
-    filterProduct(filtered) {
-      this.$emit("filter", filtered);
+    filterProduct(filter) {
+      this.selector = filter.name;
+
+      this.$emit("filter", filter);
     },
   },
 };

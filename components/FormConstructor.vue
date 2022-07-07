@@ -48,13 +48,11 @@
         :is-required="true"
       >
         <field-input
-          id="price"
           :is-error="!!getErrors(formData.price).length"
           :type="'text'"
           :value="formData.price"
-          maxlength="16"
           placeholder="Введите цену"
-          @input="changePrice"
+          @input="changePrice($event)"
         />
       </field-container>
 
@@ -117,8 +115,8 @@ export default {
       return !value.length ? ["Поле является обязательным"] : [];
     },
 
-    changePrice(event) {
-      this.formData.price = event.target.value
+    changePrice(value) {
+      this.formData.price = value
         .replace(/[^0-9.]/g, "")
         .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     },
