@@ -14,17 +14,16 @@ module.exports = {
     quotes: ["error", "double"],
     "no-extra-boolean-cast": 0,
     "comma-dangle": 0,
-    // "max-len": ["error", { code: 100 }],
     "space-before-function-paren": 0,
     semi: ["error", "always"],
     "vue/html-self-closing": [
-      "warning",
+      1,
       { html: { void: "always", normal: "always", component: "always" } },
     ],
     "vue/multi-word-component-names": [
       "error",
       {
-        ignores: ["Selector"],
+        ignores: ["Selector", "Notification"],
       },
     ],
   },

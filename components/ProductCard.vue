@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div @click="deleteProduct" class="product-card__actions" />
+    <div class="product-card__actions" @click="deleteProduct" />
   </div>
 </template>
 

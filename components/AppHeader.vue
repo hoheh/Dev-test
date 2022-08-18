@@ -1,10 +1,12 @@
 <template>
   <div class="header">
     <div class="header__title">
-      <h1 class="">Добавление товара</h1>
+      <h1 class="">
+        Добавление товара
+      </h1>
     </div>
     <div class="header__filter">
-      <selector class="header__selector" v-on="$listeners"/>
+      <selector class="header__selector" v-on="$listeners" />
     </div>
   </div>
 </template>
