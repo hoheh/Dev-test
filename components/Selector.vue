@@ -40,19 +40,19 @@ export default {
       {
         id: 1,
         name: "По убыванию цены",
-        filtered: "desc",
+        handler: (a, b) => b.price - a.price,
       },
 
       {
         id: 2,
         name: "По возврастанию цены",
-        filtered: "asc",
+        handler: (a, b) => a.price - b.price,
       },
 
       {
         id: 3,
         name: "По наименованию",
-        filtered: "byName",
+        handler: (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0),
       },
     ],
   }),

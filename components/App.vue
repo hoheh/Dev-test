@@ -52,12 +52,8 @@ export default {
   }),
 
   watch: {
-    products(newValue, oldValue) {
-      sessionStorage?.setItem("products", JSON.stringify(this.products));
-
-      this.$notification.error({
-        message: "asdasdasd",
-      });
+    products() {
+      sessionStorage.setItem("products", JSON.stringify(this.products));
     },
   },
 
@@ -83,6 +79,10 @@ export default {
           ...other,
         },
       ];
+
+      this.$notification.success({
+        message: "Товар добавлен",
+      });
     },
 
     handleDelete(productId) {
@@ -92,19 +92,7 @@ export default {
     },
 
     filterProducts(filter) {
-      switch (filter.filtered) {
-        case "desc":
-          this.products = this.products.sort((a, b) => b.price - a.price);
-          break;
-        case "asc":
-          this.products = this.products.sort((a, b) => a.price - b.price);
-          break;
-        case "byName":
-          this.products = this.products.sort(
-            (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0)
-          );
-          break;
-      }
+      this.products = this.products.sort(filter.handler);
     },
   },
 };

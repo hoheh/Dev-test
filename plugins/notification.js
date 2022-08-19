@@ -6,32 +6,18 @@ NotificationPlugin.install = function (Vue, _) {
   let vm = null;
 
   const Notify = Vue.extend(Notification);
-  console.log(Notify);
+
   Vue.prototype.$notification = {
     show(options) {
       const appEl = document.querySelector(".app");
 
-      const bgColor = {
-        error: "#C82642",
-        success: "#86C149",
-      }[options.type];
-
-      const defStyle = {
-        width: "300px",
-        height: "100px",
-        backgroundColor: bgColor,
-        color: "#fff",
-        right: "30px",
-        bottom: "30px",
-      };
-
       if (!vm) {
-        const selector = "#notification";
+        const selector = "#notification-group";
 
         if (!document.querySelector(selector)) {
           const el = document.createElement("div");
 
-          el.setAttribute("id", "notification");
+          el.setAttribute("id", "notification-group");
           appEl.appendChild(el);
         }
 
@@ -43,41 +29,35 @@ NotificationPlugin.install = function (Vue, _) {
       }
 
       vm.$data.notices.push({
+        id: Date.now(),
         message: options.message,
-        style: defStyle,
+        class: this.getClass(options),
       });
 
       setTimeout(() => {
         vm.$data.notices.shift();
-        vm.$data.notices.forEach((notice) => {
-          notice.style.top = `${
-            parseInt(notice.style.top, 10) - notice.style.height
-          }px`;
-        });
-      }, 5000);
+      }, 2000);
     },
 
-    error(options) {
-      this.show(Object.assign(options, { type: "error" }));
+    getClass({ type }) {
+      return {
+        error: "notification__inner--error",
+        success: "notification__inner--success",
+      }[type];
     },
+
+    // error(options) {
+    //   this.show(Object.assign(options, { type: "error" }));
+    // },
 
     success(options) {
       this.show(Object.assign(options, { type: "success" }));
     },
 
-    close(noticeIdx) {
-      vm.$data.notices = noticeIdx
-        ? vm.$data.notices.filter((_, idx) => idx !== noticeIdx)
+    close(noticeId) {
+      vm.$data.notices = noticeId
+        ? vm.$data.notices.filter((notice, _) => notice.id !== noticeId)
         : [];
-
-      const noticesLen = vm.$data.notices.length;
-
-      for (let i = noticeIdx; i < noticesLen; i += 1) {
-        const notice = vm.$data.notices[i];
-        notice.style.top = `${
-          parseInt(notice.style.top, 10) - notice.style.height
-        }px`;
-      }
     },
   };
 };
