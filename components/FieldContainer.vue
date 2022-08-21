@@ -43,6 +43,7 @@ export default {
 
 .field-container {
   &__inner {
+    position: relative;
     > * + * {
       margin-top: 4px;
     }
@@ -62,6 +63,9 @@ export default {
 
   &__errors {
     margin-top: 2px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 
   &__error {

@@ -47,6 +47,8 @@ export default {
 
 .field-textarea {
   &__textarea {
+    margin-bottom: 14px;
+
     &--error {
       border: 1px solid $color-negative;
     }
