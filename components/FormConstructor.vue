@@ -133,11 +133,11 @@ export default {
   }
 
   &__actions {
-    padding-top: 24px;
+    padding-top: 10px;
   }
 
   &__field:not(:nth-last-child(2)) {
-    padding-bottom: 16px;
+    padding-bottom: 2px;
   }
 }
 </style>

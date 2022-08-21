@@ -48,6 +48,8 @@ export default {
 
 .field-input {
   &__input {
+    margin-bottom: 14px;
+
     &--error {
       border: 1px solid $color-negative;
     }
