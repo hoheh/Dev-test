@@ -1,25 +1,29 @@
 <template>
   <div class="selector">
-    <input type="checkbox" id="selector-open-button" />
+    <input id="selector-open-button" type="checkbox" />
     <div class="selector__container">
-      <label for="selector-open-button"></label>
+      <label for="selector-open-button" />
       <div class="selector__wrapper">
-        <p class="selector__selected-filter">{{ selector }}</p>
+        <p class="selector__selected-filter">
+          {{ selector }}
+        </p>
         <img src="~/assets/images/drop_arrow.svg" alt="" />
       </div>
       <div class="selector__options">
         <div
-          @click="filterProduct(filter)"
           v-for="(filter, index) in selectorFilters"
-          class="selector__option"
           :key="`${filter.id}_${index}`"
+          class="selector__option"
+          @click="filterProduct(filter)"
         >
-          <label for="selector-open-button"></label>
-          <div class="selector__title">{{ filter.name }}</div>
+          <label for="selector-open-button" />
+          <div class="selector__title">
+            {{ filter.name }}
+          </div>
         </div>
       </div>
     </div>
-    <label for="selector-open-button" class="selector__active-modal"></label>
+    <label for="selector-open-button" class="selector__active-modal" />
   </div>
 </template>
 
@@ -36,19 +40,19 @@ export default {
       {
         id: 1,
         name: "По убыванию цены",
-        filtered: "desc",
+        handler: (a, b) => b.price - a.price,
       },
 
       {
         id: 2,
         name: "По возврастанию цены",
-        filtered: "asc",
+        handler: (a, b) => a.price - b.price,
       },
 
       {
         id: 3,
         name: "По наименованию",
-        filtered: "byName",
+        handler: (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0),
       },
     ],
   }),

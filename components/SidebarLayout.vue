@@ -7,9 +7,7 @@
     </div>
 
     <div class="sidebar-layout__content">
-      <transition name="products">
-        <slot name="content" />
-      </transition>
+      <slot name="content" />
     </div>
   </div>
 </template>

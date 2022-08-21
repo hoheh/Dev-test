@@ -11,15 +11,21 @@
         </template>
         <template #content>
           <div v-if="!!products.length" class="product-list">
+            <!-- <transition-group
+              name="products"
+              class="product-list__wrapper"
+              tag="div"
+            > -->
             <div class="product-list__wrapper">
               <product-card
                 v-for="(product, index) in products"
                 :key="index"
-                @deleted="handleDelete"
                 :product="product"
                 class="product-list__item"
+                @deleted="handleDelete"
               />
             </div>
+            <!-- </transition-group> -->
           </div>
           <div v-else class="product-list__out">
             <h2 class="product-list__out-title">Товары отсутствуют</h2>
@@ -33,19 +39,21 @@
 <script>
 import SidebarLayout from "~/components/SidebarLayout.vue";
 import AppHeader from "~/components/AppHeader.vue";
+import FormConstructor from "~/components/FormConstructor.vue";
+import ProductCard from "~/components/ProductCard.vue";
 
 export default {
   name: "App",
 
-  components: { SidebarLayout, AppHeader },
+  components: { SidebarLayout, AppHeader, FormConstructor, ProductCard },
 
   data: () => ({
     products: [],
   }),
 
   watch: {
-    products(newValue, oldValue) {
-      sessionStorage?.setItem("products", JSON.stringify(this.products));
+    products() {
+      sessionStorage.setItem("products", JSON.stringify(this.products));
     },
   },
 
@@ -71,6 +79,10 @@ export default {
           ...other,
         },
       ];
+
+      this.$notification.success({
+        message: "Товар добавлен",
+      });
     },
 
     handleDelete(productId) {
@@ -80,19 +92,7 @@ export default {
     },
 
     filterProducts(filter) {
-      switch (filter.filtered) {
-        case "desc":
-          this.products = this.products.sort((a, b) => b.price - a.price);
-          break;
-        case "asc":
-          this.products = this.products.sort((a, b) => a.price - b.price);
-          break;
-        case "byName":
-          this.products = this.products.sort(
-            (a, b) => b.name.charCodeAt(0) - a.name.charCodeAt(0)
-          );
-          break;
-      }
+      this.products = this.products.sort(filter.handler);
     },
   },
 };
@@ -122,14 +122,12 @@ export default {
       }
     }
 
-    &__out {
-      &-title {
-        color: #aeaeae;
-        font-size: 26px;
-        line-height: 30px;
-        font-weight: 600;
-        text-align: center;
-      }
+    &__out-title {
+      color: #aeaeae;
+      font-size: 26px;
+      line-height: 30px;
+      font-weight: 600;
+      text-align: center;
     }
   }
 }
