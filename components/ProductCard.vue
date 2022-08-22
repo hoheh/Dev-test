@@ -14,10 +14,12 @@
           </p>
         </div>
 
-        <div class="product-card__price">
-          {{ new Intl.NumberFormat().format(product.price) }}
-          руб.
-        </div>
+        <p class="product-card__price">
+          <span class="price">{{
+            Number(product.price).toLocaleString()
+          }}</span>
+          <span class="currency"> руб. </span>
+        </p>
       </div>
     </div>
 
@@ -111,12 +113,23 @@ export default {
   }
 
   &__price {
+    display: flex;
+    gap: 5px;
+    align-items: center;
     font-size: 24px;
     font-weight: 600;
     line-height: 30.17px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+
+    .price {
+      display: inline-block;
+      max-width: 75%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
 
   &__content {

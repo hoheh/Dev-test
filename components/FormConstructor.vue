@@ -48,11 +48,12 @@
         :is-required="true"
       >
         <field-input
+          v-model="modelPrice"
+          :type="changePrice ? 'number' : 'text'"
           :is-error="!!getErrors(formData.price).length"
-          :type="'text'"
-          :value="formData.price"
           placeholder="Введите цену"
-          @input="changePrice($event)"
+          @blur="changePrice = false"
+          @focus="changePrice = true"
         />
       </field-container>
 
@@ -80,11 +81,13 @@ export default {
 
   data: () => ({
     formData: {
-      name: "",
-      description: "",
-      url: "",
-      price: "",
+      name: null,
+      description: null,
+      url: null,
+      price: null,
     },
+
+    changePrice: false,
   }),
 
   computed: {
@@ -94,8 +97,22 @@ export default {
           return ["url", "name", "price"].includes(key);
         })
         .every((field) => {
-          return this.formData[field] !== "";
+          return this.formData[field] !== null && this.formData[field] !== "";
         });
+    },
+
+    modelPrice: {
+      get() {
+        return this.changePrice
+          ? this.formData.price
+          : this.formData.price
+              ?.replace(/[^\d]/g, "")
+              .replace(/\B(?=(?:\d{3})+(?!\d))/g, " ");
+      },
+
+      set(value) {
+        this.formData.price = value.replace(/\s/g, "");
+      },
     },
   },
 
@@ -104,21 +121,15 @@ export default {
       this.$emit("form:submit", this.formData);
 
       this.formData = {
-        name: "",
-        description: "",
-        url: "",
-        price: "",
+        name: null,
+        description: null,
+        url: null,
+        price: null,
       };
     },
 
     getErrors(value) {
-      return !value.length ? ["Поле является обязательным"] : [];
-    },
-
-    changePrice(value) {
-      this.formData.price = value
-        .replace(/[^0-9.]/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      return value === "" ? ["Поле является обязательным"] : [];
     },
   },
 };
