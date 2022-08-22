@@ -17,8 +17,8 @@
               tag="div"
             >
               <product-card
-                v-for="(product, index) in products"
-                :key="index"
+                v-for="product in products"
+                :key="product.id"
                 :product="product"
                 class="product-list__item"
                 @deleted="handleDelete"
@@ -26,7 +26,9 @@
             </transition-group>
           </div>
           <div v-else class="product-list__out">
-            <h2 class="product-list__out-title">Товары отсутствуют</h2>
+            <h2 class="product-list__out-title">
+              Товары отсутствуют
+            </h2>
           </div>
         </template>
       </sidebar-layout>
@@ -49,6 +51,12 @@ export default {
     products: [],
   }),
 
+  watch: {
+    products() {
+      sessionStorage.setItem("products", JSON.stringify(this.products));
+    },
+  },
+
   created() {
     if (typeof window !== "undefined") {
       const productsData = sessionStorage.getItem("products");
@@ -59,24 +67,12 @@ export default {
     }
   },
 
-  watch: {
-    products() {
-      sessionStorage.setItem("products", JSON.stringify(this.products));
-    },
-  },
-
   methods: {
     submitForm(data) {
-      const { price, ...other } = data;
-
-      this.products = [
-        ...this.products,
-        {
-          id: Date.now(),
-          price: Number(price.split(" ").join("")),
-          ...other,
-        },
-      ];
+      this.products.push({
+        id: Date.now(),
+        ...data,
+      });
 
       this.$notification.success({
         message: "Товар добавлен",
@@ -114,6 +110,9 @@ export default {
   .product-list-leave-to {
     opacity: 0;
     transform: translateY(30px);
+  }
+  .product-list-move {
+    transition: transform 2s;
   }
 
   .product-list {

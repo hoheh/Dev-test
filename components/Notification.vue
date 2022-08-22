@@ -1,13 +1,13 @@
 <template>
   <div id="notification-group" class="notification">
-    <transition-group name="fade" tag="div" id="notification-wrapper">
+    <transition-group id="notification-wrapper" name="fade" tag="div">
       <div
         v-for="notice in notices"
-        @click.stop="close(notice.id)"
         :key="`${notice.id}`"
         class="notification__inner"
         :class="notice.class"
         :style="notice.style"
+        @click.stop="close(notice.id)"
       >
         <svg
           version="1.1"
@@ -17,7 +17,7 @@
           <path
             pid="0"
             d="M10 0C4.5 0 0 4.5 0 10s4.5 10 10 10 10-4.5 10-10S15.5 0 10 0zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm-1-7L7 9l-1 2 3 3 6-6-1-2-5 5z"
-          ></path>
+          />
         </svg>
         {{ notice.message }}
       </div>

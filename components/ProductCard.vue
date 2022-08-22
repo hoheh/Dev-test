@@ -14,10 +14,10 @@
           </p>
         </div>
 
-        <div class="product-card__price">
-          {{ new Intl.NumberFormat().format(product.price) }}
+        <p class="product-card__price">
+          {{ Number(product.price).toLocaleString() }}
           руб.
-        </div>
+        </p>
       </div>
     </div>
 
