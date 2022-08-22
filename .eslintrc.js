@@ -16,7 +16,7 @@ module.exports = {
     "comma-dangle": 0,
     "space-before-function-paren": 0,
     semi: ["error", "always"],
-    indent: [1, "always"],
+    indent: [0, "always"],
     "vue/html-self-closing": [
       1,
       { html: { void: "always", normal: "always", component: "always" } },
